@@ -1,115 +1,123 @@
-let raceSelector = document.getElementById(raceSelectorId);
-let raceAttributes = document.getElementById(raceAttributesId);
-let header = createRow(headerId)
+let container = document.getElementById("container");
+
+let targetMode = false;
 
 main();
+function switchToStandardMode(){
+    targetMode = false;    
+    document.getElementById(modesHeadingsId).innerHTML = `Current mode: Standard
+    Modes:`;
+}
 
-function main(){
+function switchToReverseMode(){
+    targetMode = true;
+    console.log("triggeredswitchToReverseMode");
+    document.getElementById(modesHeadingsId).innerHTML = `Current mode: Reverse
+    Modes:`;
+}
+
+function main() {
+    headerHTML();
+    attributesHTML();
+    document.getElementById("standard").checked = true;
+}
+
+function headerHTML() {
+    let headerElement = createRow(headerId);
+
+    let modesDivElement = document.createElement("div");
+    modesDivElement.setAttribute("class", headerColumnsClass);
+
+    headerElement.appendChild(createHeading("h3", "Modes", modesHeadingsId))
+
+    let standardMode = createRadioButton("Standard", "mode", "standard");
+    standardMode.addEventListener("change", switchToStandardMode)
+    modesDivElement.appendChild(standardMode);
+
+    let reverseMode = createRadioButton("Reverse", "mode", "reverse");
+    reverseMode.addEventListener("change", switchToReverseMode)
+    modesDivElement.appendChild(reverseMode);
+
+    headerElement.appendChild(modesDivElement);
+    
+    let infoDivElement = document.createElement("div");
+    infoDivElement.setAttribute("class", headerColumnsClass);
+
+    let raceLabel = document.createElement("label");
+    raceLabel.innerHTML = "Ras: ";
+    raceLabel.setAttribute("for", raceSelectorId);
+    infoDivElement.appendChild(raceLabel);
+
+    let selectElement = addSelect(raceSelectorId);
+    selectElement.addEventListener("change", calculate);
 
     for (let index = 0; index < races.length; index++) {
-            addSelect(raceSelector, races[index].name, races[index].tag)
+        selectElement.appendChild(createOptionForSelect(races[index].name, races[index].tag));
     }
+    infoDivElement.appendChild(selectElement);
+    headerElement.appendChild(infoDivElement);
 
-    header.appendChild(raceSelector);
+    container.appendChild(headerElement);
+
+}
+
+function attributesHTML() {
+    let raceAttributesElement = document.createElement("div");
+    raceAttributesElement.id = raceAttributesId;
 
     for (let index = 0; index < attributes.length; index++) {
-        createAttributeRow(raceAttributes, attributes[index].name, attributes[index].value);
+        raceAttributesElement.appendChild(createAttributeRow(attributes[index].name, attributes[index].value));
     }
 
-    let row = createRow(resultRowId);
-    
-    createLabel(row, getInfoText(0), infoTextId);
-    
-    createLabel(row, 0, resultId);
-    
-    createLabel(row, 0, resultModifiedId);
-    
-    document.getElementById(raceAttributesId).appendChild(row);
-    
-    addOnClickButton(document.getElementById("container"), submitButtonName, calculate)
+    let rowElement = createRow(resultRowId);
+
+    rowElement.appendChild(createLabel(getInfoText(0), infoTextId, ["class", resultColumnsClass]));
+    rowElement.appendChild(createLabel(0, resultId, ["class", resultColumnsClass]));
+    rowElement.appendChild(createLabel(0, resultModifiedId, ["class", resultColumnsClass]));
+
+    raceAttributesElement.appendChild(rowElement);
+
+    container.appendChild(raceAttributesElement);
 }
 
-function addSelect(parent, name, value){
-    let select = document.createElement("option");
-    select.innerHTML = name;
-    select.value = value;
-    parent.appendChild(select); 
-}
-
-function addOnClickButton(parent, buttonName, eventFunctiom){
-    let submitButton = document.createElement("button");
-    submitButton.innerHTML = buttonName;
-    submitButton.addEventListener("click", eventFunctiom);
-    parent.appendChild(submitButton);
-}
-
-function createRow(rowId) {
-    let row = document.createElement("div");
-    row.setAttribute("class", rowClass);
-    row.id = rowId;
-    return row;
-}
-
-function calculate(){
-    let raceAttributesFields = raceAttributes.getElementsByTagName("input");
+function calculate() {
+    let fieldsElements = raceAttributes.getElementsByTagName("input");
     let sum = 0;
-    for (let index = 0; index < raceAttributesFields.length; index++) {
-        let number = parseInt(raceAttributesFields[index].value);
+    for (let index = 0; index < fieldsElements.length; index++) {
+        let number = parseInt(fieldsElements[index].value);
         if (isNaN(number)) {
             number = 0;
-            raceAttributesFields[index].value = 0;
+            fieldsElements[index].value = 0;
         }
         sum += number;
-        changeAttribute(raceAttributesFields[index].name, number);
+        changeAttribute(fieldsElements[index].name, number);
     }
-    updateAttributes(raceSelector.value);
+
+    updateAttributes(raceSelector.value, targetMode);
+
     document.getElementById(resultId).innerHTML = sum;
     document.getElementById(infoTextId).innerHTML = getInfoText(sum);
 }
 
-function getInfoText(sum){
+function getInfoText(sum) {
     let grad = 0;
-    if((sum - 150) > 0){
-            grad = Math.ceil((sum - 150)/20);
-            kvar = 20 - ((sum - 150) % 20) % 20;
-    } 
-    kvar =  150 + grad * 20 - sum;
-    grad++;
-    return "Grad " + grad + "<br>" + kvar + " poäng kvar.";
-}
-
-function createLabel(parent, labelText, labelId){
-    let label = document.createElement("label");
-    label.innerHTML = labelText;
-    if(labelId !== null){
-        label.id = labelId;
+    if ((sum - 150) > 0) {
+        grad = Math.ceil((sum - 150) / 20);
+        kvar = 20 - ((sum - 150) % 20) % 20;
     }
-    let labelDiv = document.createElement("div");
-    labelDiv.appendChild(label);
-    labelDiv.setAttribute("class", attributesColumnClass);
-    parent.appendChild(labelDiv);
+    kvar = 150 + grad * 20 - sum;
+    grad++;
+    return "Grad " + grad + ", " + kvar + " poäng kvar.";
 }
 
-function createTextField(parent, attributeName, attributeValue){
-    let attribute = document.createElement("input");
-    attribute.name = attributeName;
-    attribute.type = "text";
-    attribute.value = attributeValue;
-    let attributeDiv = document.createElement("div");
-    attributeDiv.appendChild(attribute);
-    attributeDiv.setAttribute("class", attributesColumnClass);
-    parent.appendChild(attributeDiv);
-}
+function createAttributeRow(attributeName, attributeValue) {
+    let row = createRow();
 
+    let textField = createTextField(attributeName, attributeValue, ["class", attributesColumnClass]);
+    textField.addEventListener("change", calculate);
 
-function createAttributeRow(parent, attributeName, attributeValue){
-    let row = document.createElement("div");
-    row.setAttribute("class", rowClass);
-
-    createLabel(row, attributeName + ": ", null);
-
-    createTextField(row, attributeName, attributeValue)
-
-    createLabel(row, attributeValue, attributeName)
-    parent.appendChild(row);
+    row.appendChild(createLabel(attributeName + ": ", null, ["class", attributesColumnClass]));
+    row.appendChild(textField);
+    row.appendChild(createLabel(attributeValue, attributeName, ["class", attributesColumnClass]));
+    return row;
 }

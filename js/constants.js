@@ -1,32 +1,35 @@
 //Ids:
 let raceSelectorId = "raceSelector";
-let headerId = "header";
-let infoTextId = "info_text";
+let headerId = "headerRow";
+let infoTextId = "infoText";
 let resultId = "result";
 let resultRowId = "resultRow";
-let resultModifiedId = "result_modified";
+let resultModifiedId = "resultModified";
 let raceAttributesId = "raceAttributes";
+let toggleButtonId = "toggleButton";
+let modesHeadingsId = "modesHeading";
 
 //classes
 let rowClass = "row";
 let attributesColumnClass = "attributeColumns";
-
-
-let submitButtonName = "Räkna";
+let resultColumnsClass = "resultColumns";
+let headerColumnsClass = "headerColumns";
+let checkboxContainerClass = "checkboxContainer";
+let checkmarkClass = "checkmark";
 
 let attributes = [];
 
-let races =  []
+let races = []
 
-let attributesArray = ["Hälsa","Uthållighet","Skadebonus","Inlärningsförmåga","Ledarskap","Skarpsinne","Initativsnabb","Undvika Anfall","Obeväpnadstrid","Huggvapen","Krossvapen","Kättingvapen","Stickvapen","Sköldskicklighet"];
+let attributesArray = ["Hälsa", "Uthållighet", "Skadebonus", "Inlärningsförmåga", "Ledarskap", "Skarpsinne", "Initativsnabb", "Undvika Anfall", "Obeväpnadstrid", "Huggvapen", "Krossvapen", "Kättingvapen", "Stickvapen", "Sköldskicklighet"];
 
 let racesData = [
     //[tag,         "Name",      "hp",   "uth",  "sb",   "inl",  "ls",   "ss",   "ini",  "ua",   "oe",   "hugg",     "kross",    "kätting",  "stick",    "sköld"]
-    ["alv",         "Alv",         0.9,    1.2,    0.9,    0.5,    1.3,    1,      1.4,    1.5,    1.1,    1.2,        1.1,        1.1,        1.3,        1.2],
-    ["dvarg",       "Dvärg",       1.4,    1.1,    1.1,    0.5,    1,      1,      0.8,    0.6,    0.9,    1.2,        1.1,        1.1,        0.9,        0.9],
-    ["manniska",    "Människa",    1.1,    1.1,    1.1,    0.5,    1.1,    1,      1.1,    1.1,    1.1,    1.2,        1.1,        1.1,        1.1,        1.1],
-    ["ork",         "Ork",         1.2,    1.1,    1.3,    0.5,    0.8,    1,      1,      0.7,    0.9,    1,          1.1,        1.1,        1,          0.9],
-    ["troll",       "Troll",       1.5,    0.7,    1.6,    0.5,    0.5,    1,      0.5,    0.3,    0.5,    0.8,        0.9,        0.9,        0.8,        0.5]
+    ["alv", "Alv", 0.9, 1.2, 0.9, 0.5, 1.3, 1, 1.4, 1.5, 1.1, 1.2, 1.1, 1.1, 1.3, 1.2],
+    ["dvarg", "Dvärg", 1.4, 1.1, 1.1, 0.5, 1, 1, 0.8, 0.6, 0.9, 1.2, 1.1, 1.1, 0.9, 0.9],
+    ["manniska", "Människa", 1.1, 1.1, 1.1, 0.5, 1.1, 1, 1.1, 1.1, 1.1, 1.2, 1.1, 1.1, 1.1, 1.1],
+    ["ork", "Ork", 1.2, 1.1, 1.3, 0.5, 0.8, 1, 1, 0.7, 0.9, 1, 1.1, 1.1, 1, 0.9],
+    ["troll", "Troll", 1.5, 0.7, 1.6, 0.5, 0.5, 1, 0.5, 0.3, 0.5, 0.8, 0.9, 0.9, 0.8, 0.5]
 ]
 /*
 Troll
