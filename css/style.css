@@ -1,0 +1,24 @@
+#raceAttributes{
+    width: auto;
+}
+.attributeColumns{
+    width: auto;
+    float: left;
+    min-width: 12em;
+    height: 100%;
+}
+#container{
+    width: 100%;
+}
+.row{
+    width: 100%;
+    height: 25px;
+}
+#resultRow{
+    font-weight: bold;
+    font-style: italic;
+    height: 50px;
+}
+#info_text{
+    text-align: center;
+}
